@@ -2,7 +2,7 @@
 <h4 id="Stochastic">Stochastic</h4>
 <div class="code-snippet"><span class="object-type">class</span> <code>QuantConnect.Indicators.Stochastic</code><a class="code-source" href="https://github.com/search?q=repo%3AQuantConnect%2FLean+Stochastic&type=code">[source]</a>
 </div>
-<p>This indicator computes the Slow Stochastics %K and %D. The Fast Stochastics %K is is computed by (Current Close Price - Lowest Price of given Period) / (Highest Price of given Period - Lowest Price of given Period) multiplied by 100. Once the Fast Stochastics %K is calculated the Slow Stochastic %K is calculated by the average/smoothed price of of the Fast %K with the given period. The Slow Stochastics %D is then derived from the Slow Stochastics %K with the given period.</p>
+<p>This indicator computes the Slow Stochastics %K and %D. The Fast Stochastic %K is is computed by (Current Close Price - Lowest Price of given Period) / (Highest Price of given Period - Lowest Price of given Period) multiplied by 100. Once the Fast Stochastic %K is calculated the Slow Stochastic %K is calculated by the average/smoothed price of of the Fast %K with the given period. The Slow Stochastic %D is then derived from the Slow Stochastic %K with the given period.</p>
 <div class="subsection-content">
 <div class="code-snippet"><code>get_enumerator()</code></div>
 <div class="subsection-content">
@@ -83,10 +83,10 @@
 
 <div class="code-snippet"><span class="object-type">property</span> <code>fast_stoch</code></div>
 <div class="subsection-content">
-<p>Gets the value of the Fast Stochastics %K given Period.</p>
+<p>Gets the value of the Fast Stochastic %K given Period.</p>
 
 <div class="subsection-header">Returns:</div>
-<p class="subsection-content">Gets the value of the Fast Stochastics %K given Period.</p>
+<p class="subsection-content">Gets the value of the Fast Stochastic %K given Period.</p>
 <div class="subsection-header">Return type:</div>
 <p class="subsection-content">IndicatorBase[IBaseDataBar]</p>
 </div>
@@ -143,20 +143,20 @@
 
 <div class="code-snippet"><span class="object-type">property</span> <code>stoch_d</code></div>
 <div class="subsection-content">
-<p>Gets the value of the Slow Stochastics given Period D.</p>
+<p>Gets the value of the Slow Stochastic given Period D.</p>
 
 <div class="subsection-header">Returns:</div>
-<p class="subsection-content">Gets the value of the Slow Stochastics given Period D.</p>
+<p class="subsection-content">Gets the value of the Slow Stochastic given Period D.</p>
 <div class="subsection-header">Return type:</div>
 <p class="subsection-content">IndicatorBase[IBaseDataBar]</p>
 </div>
 
 <div class="code-snippet"><span class="object-type">property</span> <code>stoch_k</code></div>
 <div class="subsection-content">
-<p>Gets the value of the Slow Stochastics given Period K.</p>
+<p>Gets the value of the Slow Stochastic given Period K.</p>
 
 <div class="subsection-header">Returns:</div>
-<p class="subsection-content">Gets the value of the Slow Stochastics given Period K.</p>
+<p class="subsection-content">Gets the value of the Slow Stochastic given Period K.</p>
 <div class="subsection-header">Return type:</div>
 <p class="subsection-content">IndicatorBase[IBaseDataBar]</p>
 </div>
@@ -195,7 +195,7 @@
 <h4 id="Stochastic">Stochastic</h4>
 <div class="code-snippet"><span class="object-type">class</span> <code>QuantConnect.Indicators.Stochastic</code><a class="code-source" href="https://github.com/search?q=repo%3AQuantConnect%2FLean+Stochastic&type=code">[source]</a>
 </div>
-<p>This indicator computes the Slow Stochastics %K and %D. The Fast Stochastics %K is is computed by (Current Close Price - Lowest Price of given Period) / (Highest Price of given Period - Lowest Price of given Period) multiplied by 100. Once the Fast Stochastics %K is calculated the Slow Stochastic %K is calculated by the average/smoothed price of of the Fast %K with the given period. The Slow Stochastics %D is then derived from the Slow Stochastics %K with the given period.</p>
+<p>This indicator computes the Slow Stochastics %K and %D. The Fast Stochastic %K is is computed by (Current Close Price - Lowest Price of given Period) / (Highest Price of given Period - Lowest Price of given Period) multiplied by 100. Once the Fast Stochastic %K is calculated the Slow Stochastic %K is calculated by the average/smoothed price of of the Fast %K with the given period. The Slow Stochastic %D is then derived from the Slow Stochastic %K with the given period.</p>
 <div class="subsection-content">
 <div class="code-snippet"><code>GetEnumerator()</code></div>
 <div class="subsection-content">
@@ -276,10 +276,10 @@
 
 <div class="code-snippet"><span class="object-type">property</span> <code>FastStoch</code></div>
 <div class="subsection-content">
-<p>Gets the value of the Fast Stochastics %K given Period.</p>
+<p>Gets the value of the Fast Stochastic %K given Period.</p>
 
 <div class="subsection-header">Returns:</div>
-<p class="subsection-content">Gets the value of the Fast Stochastics %K given Period.</p>
+<p class="subsection-content">Gets the value of the Fast Stochastic %K given Period.</p>
 <div class="subsection-header">Return type:</div>
 <p class="subsection-content">IndicatorBase&lt;IBaseDataBar&gt;</p>
 </div>
@@ -326,20 +326,20 @@
 
 <div class="code-snippet"><span class="object-type">property</span> <code>StochD</code></div>
 <div class="subsection-content">
-<p>Gets the value of the Slow Stochastics given Period D.</p>
+<p>Gets the value of the Slow Stochastic given Period D.</p>
 
 <div class="subsection-header">Returns:</div>
-<p class="subsection-content">Gets the value of the Slow Stochastics given Period D.</p>
+<p class="subsection-content">Gets the value of the Slow Stochastic given Period D.</p>
 <div class="subsection-header">Return type:</div>
 <p class="subsection-content">IndicatorBase&lt;IBaseDataBar&gt;</p>
 </div>
 
 <div class="code-snippet"><span class="object-type">property</span> <code>StochK</code></div>
 <div class="subsection-content">
-<p>Gets the value of the Slow Stochastics given Period K.</p>
+<p>Gets the value of the Slow Stochastic given Period K.</p>
 
 <div class="subsection-header">Returns:</div>
-<p class="subsection-content">Gets the value of the Slow Stochastics given Period K.</p>
+<p class="subsection-content">Gets the value of the Slow Stochastic given Period K.</p>
 <div class="subsection-header">Return type:</div>
 <p class="subsection-content">IndicatorBase&lt;IBaseDataBar&gt;</p>
 </div>

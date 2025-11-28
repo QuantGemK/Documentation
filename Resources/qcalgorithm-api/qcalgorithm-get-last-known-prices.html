@@ -1,5 +1,37 @@
 <div class="python">
-<div class="code-snippet"><code>get_last_known_prices(<span class="object-type">security</span>)</code><a class="code-source" href="https://github.com/QuantConnect/Lean/blob/master/Algorithm/QCAlgorithm.History.cs#L708">[source]</a></div>
+<div class="code-snippet"><code>get_last_known_prices(<span class="object-type">securities</span>)</code><a class="code-source" href="https://github.com/QuantConnect/Lean/blob/master/Algorithm/QCAlgorithm.History.cs#L743">[source]</a></div>
+<div class="subsection-content">
+<p>Yields data to warmup a security for all it's subscribed data types</p>
+<div class="subsection-header">Parameters:</div>
+<ul class="subsection-content">
+    <li>
+    <span class="arg-name">securities</span> (<span class="object-type">List[Security]</span>) &mdash; The securities we want to get seed data for
+    </li>
+</ul>
+<div class="subsection-header">Returns:</div>
+<p class="subsection-content">Securities historical data</p>
+<div class="subsection-header">Return type:</div>
+<p class="subsection-content">List[Symbol, BaseData]</p>
+</div>
+</div>
+<div class="python">
+<div class="code-snippet"><code>get_last_known_prices(<span class="object-type">symbols</span>)</code><a class="code-source" href="https://github.com/QuantConnect/Lean/blob/master/Algorithm/QCAlgorithm.History.cs#L755">[source]</a></div>
+<div class="subsection-content">
+<p>Yields data to warmup a security for all it's subscribed data types</p>
+<div class="subsection-header">Parameters:</div>
+<ul class="subsection-content">
+    <li>
+    <span class="arg-name">symbols</span> (<span class="object-type">List[Symbol]</span>) &mdash; The symbols we want to get seed data for
+    </li>
+</ul>
+<div class="subsection-header">Returns:</div>
+<p class="subsection-content">Securities historical data</p>
+<div class="subsection-header">Return type:</div>
+<p class="subsection-content">List[Symbol, BaseData]</p>
+</div>
+</div>
+<div class="python">
+<div class="code-snippet"><code>get_last_known_prices(<span class="object-type">security</span>)</code><a class="code-source" href="https://github.com/QuantConnect/Lean/blob/master/Algorithm/QCAlgorithm.History.cs#L713">[source]</a></div>
 <div class="subsection-content">
 <p>Yields data to warmup a security for all it's subscribed data types</p>
 <div class="subsection-header">Parameters:</div>
@@ -15,7 +47,7 @@
 </div>
 </div>
 <div class="python">
-<div class="code-snippet"><code>get_last_known_prices(<span class="object-type">symbol</span>)</code><a class="code-source" href="https://github.com/QuantConnect/Lean/blob/master/Algorithm/QCAlgorithm.History.cs#L720">[source]</a></div>
+<div class="code-snippet"><code>get_last_known_prices(<span class="object-type">symbol</span>)</code><a class="code-source" href="https://github.com/QuantConnect/Lean/blob/master/Algorithm/QCAlgorithm.History.cs#L725">[source]</a></div>
 <div class="subsection-content">
 <p>Yields data to warmup a security for all it's subscribed data types</p>
 <div class="subsection-header">Parameters:</div>
@@ -31,7 +63,39 @@
 </div>
 </div>
 <div class="csharp">
-<div class="code-snippet"><code>GetLastKnownPrices(<span class="object-type">security</span>)</code><a class="code-source" href="https://github.com/QuantConnect/Lean/blob/master/Algorithm/QCAlgorithm.History.cs#L708">[source]</a></div>
+<div class="code-snippet"><code>GetLastKnownPrices(<span class="object-type">securities</span>)</code><a class="code-source" href="https://github.com/QuantConnect/Lean/blob/master/Algorithm/QCAlgorithm.History.cs#L743">[source]</a></div>
+<div class="subsection-content">
+<p>Yields data to warmup a security for all it's subscribed data types</p>
+<div class="subsection-header">Parameters:</div>
+<ul class="subsection-content">
+    <li>
+    <span class="arg-name">securities</span> (<span class="object-type">List&lt;Security&gt;</span>) &mdash; The securities we want to get seed data for
+    </li>
+</ul>
+<div class="subsection-header">Returns:</div>
+<p class="subsection-content">Securities historical data</p>
+<div class="subsection-header">Return type:</div>
+<p class="subsection-content">IEnumerable[Symbol, BaseData]</p>
+</div>
+</div>
+<div class="csharp">
+<div class="code-snippet"><code>GetLastKnownPrices(<span class="object-type">symbols</span>)</code><a class="code-source" href="https://github.com/QuantConnect/Lean/blob/master/Algorithm/QCAlgorithm.History.cs#L755">[source]</a></div>
+<div class="subsection-content">
+<p>Yields data to warmup a security for all it's subscribed data types</p>
+<div class="subsection-header">Parameters:</div>
+<ul class="subsection-content">
+    <li>
+    <span class="arg-name">symbols</span> (<span class="object-type">List&lt;Symbol&gt;</span>) &mdash; The symbols we want to get seed data for
+    </li>
+</ul>
+<div class="subsection-header">Returns:</div>
+<p class="subsection-content">Securities historical data</p>
+<div class="subsection-header">Return type:</div>
+<p class="subsection-content">IEnumerable[Symbol, BaseData]</p>
+</div>
+</div>
+<div class="csharp">
+<div class="code-snippet"><code>GetLastKnownPrices(<span class="object-type">security</span>)</code><a class="code-source" href="https://github.com/QuantConnect/Lean/blob/master/Algorithm/QCAlgorithm.History.cs#L713">[source]</a></div>
 <div class="subsection-content">
 <p>Yields data to warmup a security for all it's subscribed data types</p>
 <div class="subsection-header">Parameters:</div>
@@ -47,7 +111,7 @@
 </div>
 </div>
 <div class="csharp">
-<div class="code-snippet"><code>GetLastKnownPrices(<span class="object-type">symbol</span>)</code><a class="code-source" href="https://github.com/QuantConnect/Lean/blob/master/Algorithm/QCAlgorithm.History.cs#L720">[source]</a></div>
+<div class="code-snippet"><code>GetLastKnownPrices(<span class="object-type">symbol</span>)</code><a class="code-source" href="https://github.com/QuantConnect/Lean/blob/master/Algorithm/QCAlgorithm.History.cs#L725">[source]</a></div>
 <div class="subsection-content">
 <p>Yields data to warmup a security for all it's subscribed data types</p>
 <div class="subsection-header">Parameters:</div>
