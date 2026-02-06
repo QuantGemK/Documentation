@@ -9,13 +9,13 @@ The FOREX price data enables you to trade currency pairs in the global market. E
 
 <div class="section-example-container testable">
 <pre class="python">from AlgorithmImports import *
-from QuantConnect.DataSource import *
+
 
 class ForexCarryTradeAlgorithm(QCAlgorithm):
 
     def initialize(self) -&gt; None:
-
-        self.set_start_date(2008, 1, 1) 
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(25000)
         
         # We will use hard-coded interest rates for each base currency
@@ -57,7 +57,8 @@ class ForexCarryTradeAlgorithm(QCAlgorithm):
     
     public override void Initialize()
     {
-        SetStartDate(2008, 1, 1);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(25000);
         
         // We will use hard-coded interest rates for each base currency
@@ -99,13 +100,13 @@ class ForexCarryTradeAlgorithm(QCAlgorithm):
 
 <div class="section-example-container testable">
 <pre class="python">from AlgorithmImports import *
-from QuantConnect.DataSource import *
+
 
 class ForexCarryTradeAlgorithm(QCAlgorithm):
 
     def initialize(self) -&gt; None:
-
-        self.set_start_date(2008, 1, 1) 
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(25000)
         
         def to_symbol(ticker: str) -&gt; Symbol:
@@ -154,7 +155,8 @@ class IntestRatesAlphaModel(AlphaModel):
 {
     public override void Initialize()
     {
-        SetStartDate(2008, 1, 1);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(25000);
         
         Symbol toSymbol(string ticker)

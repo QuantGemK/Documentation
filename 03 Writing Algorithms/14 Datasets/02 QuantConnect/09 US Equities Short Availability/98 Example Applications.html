@@ -12,11 +12,12 @@ The US Equities Short Availability dataset enables you to accurately design stra
 
 class ShortAvailabilityDataAlgorithm(QCAlgorithm):
     def initialize(self) -&gt; None:
-        self.set_start_date(2021, 1, 1)
-        self.set_end_date(2021, 7, 1)
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(1000)
         # Seed the security price as the last known price, such that the price data is immediately available at initial rebalance
-        self.set_security_initializer(MySecurityInitializer(self.brokerage_model, FuncSecuritySeeder(self.get_last_known_prices)))
+        self.settings.seed_initial_prices = True
+        self.add_security_initializer(self._custom_security_initializer)
 
         self.equity = self.add_equity("GME")
 
@@ -40,18 +41,13 @@ class ShortAvailabilityDataAlgorithm(QCAlgorithm):
 
         # Test whether we can short the desired quantity
         quantity = self.calculate_order_quantity(symbol, -1)
-        if self.shortable(symbol, quantity):
+        if quantity and self.shortable(symbol, quantity):
             self.market_order(symbol, quantity)
 
     def on_margin_call_warning(self) -&gt; None:
         self.liquidate()
 
-class MySecurityInitializer(BrokerageModelSecurityInitializer):
-    def __init__(self, brokerage_model: IBrokerageModel, security_seeder: ISecuritySeeder) -&gt; None:
-        super().__init__(brokerage_model, security_seeder)
-
-    def initialize(self, security: Security) -&gt; None:
-        super().initialize(security)
+    def _custom_security_initializer(self, security: Security) -&gt; None:
         # Set the shortable provider as your broker for accurate short reality modeling
         security.set_shortable_provider(InteractiveBrokersShortableProvider())</pre>
 <pre class="csharp">public class ShortAvailabilityDataAlgorithm : QCAlgorithm
@@ -60,11 +56,16 @@ class MySecurityInitializer(BrokerageModelSecurityInitializer):
     
     public override void Initialize()
     {
-        SetStartDate(2021, 1, 1);
-        SetEndDate(2021, 7, 1);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(1000);
         // Seed the security price as the last known price, such that the price data is immediately available at initial rebalance
-        SetSecurityInitializer(new MySecurityInitializer(BrokerageModel, new FuncSecuritySeeder(GetLastKnownPrices)));
+        Settings.SeedInitialPrices = true;
+        AddSecurityInitializer(security =&gt;
+        {
+            // Set the shortable provider as your broker for accurate short reality modeling
+            security.SetShortableProvider(new InteractiveBrokersShortableProvider());    
+        });
         
         _equity = AddEquity("GME");
         
@@ -87,7 +88,7 @@ class MySecurityInitializer(BrokerageModelSecurityInitializer):
 
         // Test whether we can short the desired quantity
         var quantity = CalculateOrderQuantity(symbol, -1m);
-        if (Shortable(symbol, quantity))
+        if (quantity != 0 &amp;&amp; Shortable(symbol, quantity))
         {
             MarketOrder(symbol, quantity);
         }
@@ -97,36 +98,24 @@ class MySecurityInitializer(BrokerageModelSecurityInitializer):
     {
         Liquidate();
     }
-
-    class MySecurityInitializer : BrokerageModelSecurityInitializer
-    {
-        public MySecurityInitializer(IBrokerageModel brokerageModel, ISecuritySeeder securitySeeder)
-            : base(brokerageModel, securitySeeder) {}    
-
-        public override void Initialize(Security security)
-        {
-            base.Initialize(security);
-            // Set the shortable provider as your broker for accurate short reality modeling
-            security.SetShortableProvider(new InteractiveBrokersShortableProvider());    
-        }
-    }
 }</pre>
 </div>
 <h4>Framework Algorithm Example</h4>
 <p>The following example algorithm shorts GameStop every day there are shares available to short. If the algorithm receives a margin call, it liquidates the position and start again on the next day.</p>
 <div class="section-example-container testable">
 <pre class="python">from AlgorithmImports import *
-from QuantConnect.DataSource import *
+
 
 class ShortAvailabilityDataAlgorithm(QCAlgorithm):
 
     def initialize(self) -&gt; None:
         
-        self.set_start_date(2021, 1, 1)
-        self.set_end_date(2021, 7, 1)
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(1000)
         # Seed the security price as the last known price, such that the price data is immediately available at initial rebalance
-        self.set_security_initializer(MySecurityInitializer(self.brokerage_model, FuncSecuritySeeder(self.get_last_known_prices)))
+        self.settings.seed_initial_prices = True
+        self.add_security_initializer(self._custom_security_initializer)
 
         self.set_universe_selection(ManualUniverseSelectionModel(
             [Symbol.create("GME", SecurityType.EQUITY, Market.USA)]))           
@@ -140,6 +129,10 @@ class ShortAvailabilityDataAlgorithm(QCAlgorithm):
     def on_margin_call_warning(self) -&gt; None:
         self.emit_insights([Insight.price(kvp.Key, timedelta(1), InsightDirection.FLAT)
             for kvp in self.securities if kvp.Value.invested])
+
+    def _custom_security_initializer(self, security: Security) -&gt; None:
+        # Set the shortable provider as IB
+        security.set_shortable_provider(InteractiveBrokersShortableProvider())
 
 class ShortableExecutionModel(ExecutionModel):
     def __init__(self) -&gt; None:
@@ -161,25 +154,21 @@ class ShortableExecutionModel(ExecutionModel):
                 if quantity &gt; 0 or algorithm.shortable(target.symbol, quantity):
                     algorithm.market_order(target.symbol, quantity)
 
-            self.targets_collection.clear_fulfilled(algorithm)
-
-class MySecurityInitializer(BrokerageModelSecurityInitializer):
-    def __init__(self, brokerage_model: IBrokerageModel, security_seeder: ISecuritySeeder) -&gt; None:
-        super().__init__(brokerage_model, security_seeder)
-
-    def initialize(self, security: Security) -&gt; None:
-        super().initialize(security)
-        # Set the shortable provider as IB
-        security.set_shortable_provider(InteractiveBrokersShortableProvider())</pre>
+            self.targets_collection.clear_fulfilled(algorithm)</pre>
 <pre class="csharp">public class ShortAvailabilityDataAlgorithm : QCAlgorithm
 {
     public override void Initialize()
     {
-        SetStartDate(2021, 1, 1);
-        SetEndDate(2021, 7, 1);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(1000);
         // Seed the security price as the last known price, such that the price data is immediately available at initial rebalance
-        SetSecurityInitializer(new MySecurityInitializer(BrokerageModel, new FuncSecuritySeeder(GetLastKnownPrices)));
+        Settings.SeedInitialPrices = true;
+        AddSecurityInitializer(security =&gt;
+        {
+            // Set the shortable provider as your broker for accurate short reality modeling
+            security.SetShortableProvider(new InteractiveBrokersShortableProvider());    
+        });
 
         SetUniverseSelection(new ManualUniverseSelectionModel(
             QuantConnect.Symbol.Create("GME", SecurityType.Equity, Market.USA)));            
@@ -222,19 +211,6 @@ class MySecurityInitializer(BrokerageModelSecurityInitializer):
 
                 _targetsCollection.ClearFulfilled(algorithm);
             }
-        }
-    }
-
-    class MySecurityInitializer : BrokerageModelSecurityInitializer
-    {
-        public MySecurityInitializer(IBrokerageModel brokerageModel, ISecuritySeeder securitySeeder)
-            : base(brokerageModel, securitySeeder) {}    
-
-        public override void Initialize(Security security)
-        {
-            base.Initialize(security);
-            // Set the shortable provider as IB
-            security.SetShortableProvider(new InteractiveBrokersShortableProvider());    
         }
     }
 }</pre>

@@ -13,8 +13,8 @@ The US Index Options Universe dataset enables you to accurately design strategie
 
 class IndexOptionsUniverseAlgorithm(QCAlgorithm):
     def initialize(self) -&GT; None:
-        self.set_start_date(2021, 1, 1)
-        self.set_end_date(2021, 2, 1)
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(10000000)
 
         # Asynchronous can use computational resources efficiently
@@ -48,7 +48,7 @@ class IndexOptionsUniverseAlgorithm(QCAlgorithm):
         # Select the contracts with delta very close to -1 and high open interest
         # This can effectively hedge most of the price change of the underlying and ensure the liquidity
         # Make sure the contract is expiring close for its tradbility
-        return universe.include_weeklys().puts_only().expiration(2, 7).delta(-1, -0.95).open_interest(10, 1000)
+        return universe.puts_only().expiration(2, 7).delta(-1, -0.95).open_interest(10, 1000)
 
     def buy_hedge_contract(self) -&GT; None:
         chain = self.current_slice.option_chains.get(self.option_symbol)
@@ -75,8 +75,8 @@ class IndexOptionsUniverseAlgorithm(QCAlgorithm):
     
     public override void Initialize()
     {
-        SetStartDate(2021, 1, 1);
-        SetEndDate(2021, 2, 1);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(10000000);
         // Asynchronous can use computational resources efficiently
         UniverseSettings.Asynchronous = true;
@@ -111,7 +111,6 @@ class IndexOptionsUniverseAlgorithm(QCAlgorithm):
         // This can effectively hedge most of the price change of the underlying and ensure the liquidity
         // Make sure the contract is expiring close for its tradbility
         return universe
-            .IncludeWeeklys()
             .PutsOnly()
             .Expiration(2, 7)
             .Delta(-1m, -0.95m)
@@ -156,9 +155,9 @@ class IndexOptionsUniverseAlgorithm(QCAlgorithm):
 
 class IndexOptionsUniverseFrameworkAlgorithm(QCAlgorithm):
     def initialize(self) -&gt; None:
-        self.set_start_date(2023, 1, 1)
-        self.set_end_date(2023, 12, 31)
-        self.set_cash(100000)
+        self.set_start_date(2024, 12, 1)
+        self.set_end_date(2024, 12, 31)
+        self.set_cash(1000000)
         # Asynchronous can use computational resources efficiently
         self.universe_settings.asynchronous = True
 
@@ -176,12 +175,12 @@ class IndexOptionsUniverseSelectionModel(OptionUniverseSelectionModel):
 
     def select_option_chain_symbols(self, dt: datetime) -&gt; List[Symbol]:
         # Select only SPX options as our focus, which is a highly traded volatile index with great upward momentum
-        return [Symbol.create("NVDA", SecurityType.OPTION, Market.USA)]
+        return [Symbol.create("SPX", SecurityType.INDEX_OPTION, Market.USA)]
 
     def filter(self, universe: OptionFilterUniverse) -&gt; OptionFilterUniverse:
         # To ensure the liquidity and tradability, make sure the option is not 0-DTE and have a fair open interest
         # A longer TTM will have lower Gamma thus more stable in the local delta-neutral position
-        return universe.include_weeklys().expiration(30, 90).open_interest(50, 1000)
+        return universe.expiration(30, 90).open_interest(50, 1000)
 
 class OptionDeltaGammaAlphaModel(AlphaModel):
     def __init__(self) -&gt; None:
@@ -200,11 +199,11 @@ class OptionDeltaGammaAlphaModel(AlphaModel):
 
                 # Calculate delta and gamma per strike price group for later filtering, ensure both call and put available for option strategy
                 delta_gamma_symbols = []
-                strikes = set(x.strikes for x in contracts if len([y for y in contracts if y.strike == x.strike]) == 2)
+                strikes = set(x.strike for x in contracts if len([y for y in contracts if y.strike == x.strike]) == 2)
                 for strike in strikes:
                     # Get both call and put for their aggregated delta and gamma
-                    call = next(filter(lambda x: x.right == OptionRight.CALL and x.strike == strike), contracts)
-                    put = next(filter(lambda x: x.right == OptionRight.PUT and x.strike == strike), contracts)
+                    call = next(filter(lambda x: x.right == OptionRight.CALL and x.strike == strike, contracts))
+                    put = next(filter(lambda x: x.right == OptionRight.PUT and x.strike == strike, contracts))
                     delta_gamma_symbols.append((call.greeks.delta + put.greeks.delta, call.greeks.gamma + put.greeks.gamma, call.symbol, put.symbol))
                 
                 if len(delta_gamma_symbols) == 0:
@@ -243,9 +242,9 @@ class SingleSharePortfolioConstructionModel(PortfolioConstructionModel):
 {
     public override void Initialize()
     {
-        SetStartDate(2024, 1, 1);
-        SetEndDate(2024, 3, 31);
-        SetCash(100000);
+        SetStartDate(2024, 12, 1);
+        SetEndDate(2024, 12, 31);
+        SetCash(1000000);
         // Asynchronous can use computational resources efficiently
         UniverseSettings.Asynchronous = true;
 
@@ -275,7 +274,6 @@ class IndexOptionsUniverseSelectionModel : OptionUniverseSelectionModel
         // To ensure the liquidity and tradability, make sure the option is not 0-DTE and have a fair open interest
         // A longer TTM will have lower Gamma thus more stable in the local delta-neutral position
         return filter
-            .IncludeWeeklys()
             .Expiration(30, 90)
             .OpenInterest(50, 1000);
     }

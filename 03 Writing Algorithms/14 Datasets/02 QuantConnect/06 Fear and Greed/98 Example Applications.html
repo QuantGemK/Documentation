@@ -11,10 +11,14 @@ The Fear and Greed dataset quantifies the degree of fear and greed in the US Equ
 <p>The following example algorithm buys SPY when the Fear and Greed index is less than 25 (extreme fear) and sells when it's above 75 (extreme greed).</p>
 
 <div class="section-example-container testable">
-<pre class="python">class FearAndGreedExampleAlgorithm(QCAlgorithm):
+<pre class="python">from AlgorithmImports import *
+
+
+class FearAndGreedExampleAlgorithm(QCAlgorithm):
+
     def initialize(self) -&gt; None:
-        self.set_start_date(2020, 1, 1)
-        self.set_end_date(2024, 10, 1)
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(100000)
 
         # Add the market index to trade.
@@ -40,8 +44,8 @@ The Fear and Greed dataset quantifies the degree of fear and greed in the US Equ
 
     public override void Initialize()
     {
-        SetStartDate(2020, 1, 1);
-        SetEndDate(2024, 10, 1);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(100000);
 
         // Add the market index to trade.
@@ -75,11 +79,14 @@ The Fear and Greed dataset quantifies the degree of fear and greed in the US Equ
 <p>The following example algorithm buys SPY when the Fear and Greed index is less than 25 (extreme fear) and sells when it's above 75 (extreme greed).</p>
 
 <div class="section-example-container testable">
-<pre class="python">class FearAndGreedExampleAlgorithm(QCAlgorithm):
+<pre class="python">from AlgorithmImports import *
+
+
+class FearAndGreedExampleAlgorithm(QCAlgorithm):
 
     def initialize(self) -&gt; None:
-        self.set_start_date(2020, 1, 1)
-        self.set_end_date(2024, 10, 1)
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(100000)
 
         # Trade SPY on a daily basis.
@@ -101,7 +108,7 @@ class FearAndGreedAlphaModel(AlphaModel):
         # Add the Fear and Greed dataset. 
         self._dataset_symbol = algorithm.add_data(FearGreedIndex, 'FG').symbol
 
-    def update(self, algorithm: QCAlgorithm, data: Slice) -&gt; list[Insight]:
+    def update(self, algorithm: QCAlgorithm, data: Slice) -&gt; List[Insight]:
         # Wait until the Fear and Greed dataset has new data.
         if self._dataset_symbol not in data:
             return []
@@ -134,8 +141,8 @@ class FearAndGreedAlphaModel(AlphaModel):
 {
     public override void Initialize()
     {
-        SetStartDate(2020, 1, 1);
-        SetEndDate(2024, 10, 1);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(100000);
 
         // Trade SPY on a daily basis.

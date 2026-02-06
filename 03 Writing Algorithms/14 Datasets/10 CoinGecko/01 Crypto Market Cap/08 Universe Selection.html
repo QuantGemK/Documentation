@@ -1,0 +1,60 @@
+<p>To select a dynamic universe of Cryptos based on CoinGecko Crypto Market Cap data, call the <code class="csharp">AddUniverse</code><code class="python">add_universe</code> method with the <code>CoinGeckoUniverse</code> class and a selection function. Note that the filtered output is a list of names of the coins. If corresponding tradable crypto pairs are preferred, call <code class="csharp">CreateSymbol(market, quoteCurrency)</code><code class="python">create_symbol(market, quoteCurrency)</code> method for each output item.</p> 
+
+<div class="section-example-container">
+<pre class="python">class CryptoMarketCapUniverseAlgorithm(QCAlgorithm):
+
+    def initialize(self) -&gt; None:
+        self.set_account_currency("USD") 
+        self._market = Market.COINBASE
+        self._market_pairs = [
+            x.key.symbol 
+            for x in self.symbol_properties_database.get_symbol_properties_list(self._market) 
+            if x.value.quote_currency == self.account_currency
+        ]
+        self._universe = self.add_universe(CoinGeckoUniverse, 'CoinGeckoUniverse', Resolution.DAILY, self._select_assets)
+
+    def _select_assets(self, data: List[CoinGecko]) -&gt; List[Symbol]:
+        for datum in data:
+            self.debug(f'{datum.coin},{datum.market_cap},{datum.price}')
+
+        # Select the coins that our brokerage supports and have a quote currency that matches
+        # our account currency.
+        tradable_coins = [d for d in data if d.coin + self.account_currency in self._market_pairs]
+        # Select the largest coins and create their Symbol objects.
+        return [
+            c.create_symbol(self._market, self.account_currency) 
+            for c in sorted(tradable_coins, key=lambda x: x.market_cap)[-10:]
+        ]</pre>
+<pre class="csharp">public class CryptoMarketCapUniverseAlgorithm : QCAlgorithm
+{
+    private Universe _universe;
+    public override void Initialize()
+    {
+        SetAccountCurrency("USD");
+        var market = Market.Coinbase;
+        var marketPairs = SymbolPropertiesDatabase.GetSymbolPropertiesList(market)
+            .Where(x =&gt; x.Value.QuoteCurrency == AccountCurrency)
+            .Select(x =&gt; x.Key.Symbol)
+            .ToList();
+        _universe = AddUniverse&lt;CoinGecko&gt;(data =&gt;
+        {
+            foreach (var datum in data.OfType&lt;CoinGecko&gt;())
+            {
+                Debug($"{datum.Coin},{datum.MarketCap},{datum.Price}");
+            }
+            return data
+                .Select(c =&gt; c as CoinGecko)
+                // Select the coins that the brokerage supports and have a quote currency that 
+                // matches our account currency.
+                .Where(c =&gt; marketPairs.Contains(c.Coin + AccountCurrency))
+                // Select the 10 largest coins.
+                .OrderByDescending(c =&gt; c.MarketCap)
+                .Take(10)
+                // Create the Symbol objects of the selected coins.
+                .Select(c =&gt; c.CreateSymbol(market, AccountCurrency));
+        });
+    }
+}</pre>
+</div>
+
+<p>For more information about dynamic universes, see <a href="/docs/v2/writing-algorithms/universes/key-concepts">Universes</a>.</p>

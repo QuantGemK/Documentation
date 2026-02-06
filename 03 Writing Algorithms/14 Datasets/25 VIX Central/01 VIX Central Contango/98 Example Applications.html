@@ -4,13 +4,13 @@
 
 <div class="section-example-container testable">
 <pre class="python">from AlgorithmImports import *
-from QuantConnect.DataSource import *
+
 
 class VixCentralContangoAlgorithm (QCAlgorithm):
 
     def initialize(self) -&gt; None:
-        self.set_start_date(2014,1,1) 
-        self.set_end_date(2018,1,1)  
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(25000)
         # SPY as market representative for macroeconomy indicator trading
         self.spy = self.add_equity("SPY", Resolution.DAILY).symbol
@@ -26,20 +26,19 @@ class VixCentralContangoAlgorithm (QCAlgorithm):
 
         # Bet the market will go up if F2 - F1 price percentage change is positive, meaning the near-term market volatility is expected to be low
         if not self.portfolio.invested and ratio &gt; 0:
-            self.market_order(self.spy, 100)
+            self.set_holdings(self.spy, 1)
         # Liqudiate otherwise to avoid excessive market volatility
         elif ratio &lt; 0:
             self.liquidate()
 </pre>
 <pre class="csharp">public class VixCentralContangoAlgorithm : QCAlgorithm
 {
-    private Symbol _spy;
-    private Symbol _contango;
+    private Symbol _spy, _contango;
 
     public override void Initialize()
     {
-        SetStartDate(2014, 1, 1);
-        SetEndDate(2018, 1, 1);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(25000);
         // SPY as market representative for macroeconomy indicator trading
         _spy = AddEquity("SPY", Resolution.Daily).Symbol;
@@ -60,12 +59,12 @@ class VixCentralContangoAlgorithm (QCAlgorithm):
         // Bet the market will go up if F2 - F1 price percentage change is positive, meaning the near-term market volatility is expected to be low
         if (!Portfolio.Invested &amp;&amp; ratio &gt; 0)
         {
-            MarketOrder(_spy, 100);
+            SetHoldings(_spy, 1);
         }
         // Liqudiate otherwise to avoid excessive market volatility
         else if(ratio &lt; 0)
         {
-                Liquidate();
+            Liquidate();
         }
     }
 }</pre></div>
@@ -73,13 +72,13 @@ class VixCentralContangoAlgorithm (QCAlgorithm):
 <p>The following example algorithm buys SPY when the percentage change between contract F2 and F1 (<code>Contango_F2_Minus_F1</code>) is positive. Otherwise, it remains in cash.</p>
 <div class="section-example-container testable">
 <pre class="python">from AlgorithmImports import *
-from QuantConnect.DataSource import *
+
 
 class VixCentralContangoAlgorithm (QCAlgorithm):
 
     def initialize(self) -&gt; None:
-        self.set_start_date(2014,1,1) 
-        self.set_end_date(2018,1,1)  
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(25000)
         
         self.universe_settings.resolution = Resolution.DAILY
@@ -90,6 +89,7 @@ class VixCentralContangoAlgorithm (QCAlgorithm):
         self.add_alpha(ContangoAlphaModel(self))
         # Equal weighting investment to evenly dissipate the capital concentration risk on non-systematic risky event
         self.set_portfolio_construction(EqualWeightingPortfolioConstructionModel())
+
 
 class ContangoAlphaModel(AlphaModel):
 
@@ -133,8 +133,8 @@ class ContangoAlphaModel(AlphaModel):
 {
     public override void Initialize()
     {
-        SetStartDate(2014, 1, 1);
-        SetEndDate(2018, 1, 1);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(25000);
 
         UniverseSettings.Resolution = Resolution.Daily;

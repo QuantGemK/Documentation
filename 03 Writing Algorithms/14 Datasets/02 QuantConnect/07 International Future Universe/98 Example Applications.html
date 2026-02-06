@@ -9,16 +9,20 @@ The International Futures Universe dataset enables you to design Futures strateg
 <p>The following example algorithm uses the <a href="/docs/v2/writing-algorithms/indicators/supported-indicators/zig-zag">ZigZag indicator</a> to determine the trend of Hang Seng Index. It then trades the Index with HSI Futures.</p>
 
 <div class="section-example-container testable">
-<pre class="python">class InternationalFuturesDataAlgorithm(QCAlgorithm):
+<pre class="python">from AlgorithmImports import *
+
+
+class InternationalFuturesDataAlgorithm(QCAlgorithm):
+
     def initialize(self) -&gt; None:
-        self.set_start_date(2021, 1, 1)
-        self.set_end_date(2021, 7, 1)
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         # Set the time zone to HKT to make it more comparable with the exchange.
         self.set_time_zone(TimeZones.HONG_KONG)
         # Set the account currency as HKD to trade HSI Futures.
         self.set_account_currency("HKD", 1000000)
         # Seed the last price of the contracts for filling.
-        self.set_security_initializer(BrokerageModelSecurityInitializer(self.brokerage_model, FuncSecuritySeeder(self.get_last_known_prices)))
+        self.settings.seed_initial_prices = True
 
         # Request HSI Futures to trade. 
         # Note that we will trade the contract with the highest open interest for liquidity.
@@ -59,15 +63,15 @@ The International Futures Universe dataset enables you to design Futures strateg
 
     public override void Initialize()
     {
-        SetStartDate(2021, 1, 1);
-        SetEndDate(2021, 7, 1);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         // Set the time zone to HKT to make it more comparable with the exchange.
         SetTimeZone(TimeZones.HongKong);
         // Set the account currency as HKD to trade HSI Futures.
         SetAccountCurrency("HKD", 1000000);
 
         // Seed the last price of the contracts for filling.
-        SetSecurityInitializer(new BrokerageModelSecurityInitializer(BrokerageModel, new FuncSecuritySeeder(GetLastKnownPrices)));
+        Settings.SeedInitialPrices = true;
 
         // Request HSI Futures to trade. 
         // Note that we will trade the contract with the highest open interest for liquidity.

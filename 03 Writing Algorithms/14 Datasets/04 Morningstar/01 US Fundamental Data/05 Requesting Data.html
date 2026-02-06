@@ -1,6 +1,6 @@
 <p>You don't need any special code to request US Fundamental Data. You can access the current and historical fundamental data for any of the US Equities that this dataset includes.</p>
 
-<div class="section-example-container">
+<div class="section-example-container skip-test">
 <pre class="python">class MorningStarDataAlgorithm(QCAlgorithm):
 
     def initialize(self) -&gt; None:
@@ -17,10 +17,10 @@
 
         # Option 2B: Create a fundamental universe (framework version)
         self.add_universe_selection(FundamentalUniverseSelectionModel(self.fundamental_function))</pre>
-<pre class="csharp">private Universe _universe;
-
-public class MorningStarDataAlgorithm : QCAlgorithm
-{    	
+<pre class="csharp">public class MorningStarDataAlgorithm : QCAlgorithm
+{
+    private Universe _universe;
+    
     public override void Initialize()
     {
         SetStartDate(2021, 1, 1);

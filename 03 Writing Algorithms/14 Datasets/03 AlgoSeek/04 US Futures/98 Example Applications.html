@@ -9,14 +9,15 @@ The US Futures dataset enables you to accurately design Futures strategies. Exam
 
 <div class="section-example-container testable">
 <pre class="python">from AlgorithmImports import *
-from QuantConnect.DataSource import *
 
 class USFuturesDataAlgorithm(QCAlgorithm):
 
     def initialize(self) -&gt; None:
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(1000000)
         # Setting the continuous contract mapping criteria for both Gold and Micro Gold contracts, since we want to order the highest liquidity contracts
-        self.set_security_initializer(lambda security: FuncSecuritySeeder(self.get_last_known_prices).seed_security(security))
+        self.settings.seed_initial_prices = True
         self.gold = self.add_future(Futures.Metals.GOLD,
             extended_market_hours=True,
             data_mapping_mode=DataMappingMode.OPEN_INTEREST,
@@ -54,8 +55,11 @@ class USFuturesDataAlgorithm(QCAlgorithm):
 
     public override void Initialize()
     {
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(1000000);
         // Setting the continuous contract mapping criteria for both Gold and Micro Gold contracts, since we want to order the highest liquidity contracts
+        Settings.SeedInitialPrices = true;
         _gold = AddFuture(Futures.Metals.Gold,
             extendedMarketHours: true,
             dataMappingMode: DataMappingMode.OpenInterest,
@@ -102,15 +106,12 @@ class USFuturesDataAlgorithm(QCAlgorithm):
 
 <div class="section-example-container testable">
 <pre class="python">from AlgorithmImports import *
-from QuantConnect.DataSource import *
-from Selection.FutureUniverseSelectionModel import FutureUniverseSelectionModel
 
 class USFuturesDataAlgorithm(QCAlgorithm):
 
     def initialize(self) -&gt; None:
-
-        self.set_start_date(2013, 12, 20) 
-        self.set_end_date(2014, 2, 20)
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(100000)
         self.universe_settings.asynchronous = True
         # Set up an universe selection model that selects the front month contract
@@ -147,14 +148,14 @@ class ConstantFuturesAlphaModel(AlphaModel):
         
         insights = []
         # For both gold and micro gold, select the front month contract (only contract) in the chain
-        for kvp in slice.future_chains:
-            chain = [contract for contract in kvp.Value]
+        for symbol, contracts in slice.future_chains.items():
+            chain = [contract for contract in contracts]
             contract = chain[0]
             
             # Long gold and short micro gold as planned
-            if kvp.Key == self.long_symbol:
+            if symbol == self.long_symbol:
                 insights.append(Insight.price(contract.symbol, contract.expiry + timedelta(days=1), InsightDirection.UP))
-            elif kvp.Key == self.short_symbol:
+            elif symbol == self.short_symbol:
                 insights.append(Insight.price(contract.symbol, contract.expiry + timedelta(days=1), InsightDirection.DOWN))
         
         return insights
@@ -177,8 +178,8 @@ class SingleSharePortfolioConstructionModel(PortfolioConstructionModel):
 {        
     public override void Initialize()
     {
-        SetStartDate(2013, 12, 20);
-        SetEndDate(2014, 2, 20);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(1000000);
         UniverseSettings.Asynchronous = true;
         // Set up an universe selection model that selects the front month contract

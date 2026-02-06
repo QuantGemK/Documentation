@@ -10,14 +10,15 @@ The Brain ML Stock Ranking dataset enables you to test strategies using the mach
 
 <div class="section-example-container testable">
 <pre class="python">from AlgorithmImports import *
-from QuantConnect.DataSource import *
+
 
 class BrainMLRankingDataAlgorithm(QCAlgorithm):
     def initialize(self) -&gt; None:
-        self.set_start_date(2021, 1, 1)
-        self.set_end_date(2021, 7, 8)
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(100000) 
-        
+        # Seed the price of each asset with its last known price to avoid trading errors.
+        self.settings.seed_initial_prices = True
         # We cherry picked 5 largest stocks, high trading volume provides better information and credibility for ML ranking
         tickers = ["AAPL", "TSLA", "MSFT", "F", "KO"]
         self.symbol_by_dataset_symbol = {}
@@ -57,10 +58,11 @@ class BrainMLRankingDataAlgorithm(QCAlgorithm):
     
     public override void Initialize()
     {
-        SetStartDate(2021, 1, 1);
-        SetEndDate(2021, 7, 8);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(100000);
-        
+        // Seed the price of each asset with its last known price to avoid trading errors.
+        Settings.SeedInitialPrices = true;
         // We cherry picked 5 largest stocks, high trading volume provides better information and credibility for ML ranking
         var tickers = new List&lt;string&gt;() {"AAPL", "TSLA", "MSFT", "F", "KO"};
         foreach (var ticker in tickers)
@@ -117,12 +119,12 @@ class BrainMLRankingDataAlgorithm(QCAlgorithm):
 
 <div class="section-example-container testable">
 <pre class="python">from AlgorithmImports import *
-from QuantConnect.DataSource import *
+
 
 class BrainMLRankingDataAlgorithm(QCAlgorithm):
     def initialize(self) -&gt; None:
-        self.set_start_date(2021, 1, 1)
-        self.set_end_date(2021, 7, 8)
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(100000) 
         
         self.universe_settings.resolution = Resolution.DAILY
@@ -209,8 +211,8 @@ class SymbolData:
 {
     public override void Initialize()
     {
-        SetStartDate(2021, 1, 1);
-        SetEndDate(2021, 7, 8);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(100000);
         
         // Select based on ML ranking data

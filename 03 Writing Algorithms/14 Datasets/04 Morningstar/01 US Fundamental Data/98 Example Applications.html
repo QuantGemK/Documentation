@@ -11,15 +11,15 @@ The US Fundamentals dataset enables you to design strategies harnessing fundamen
 
 <div class="section-example-container testable">
 <pre class="python">from AlgorithmImports import *
-from QuantConnect.DataSource import *
 
 class MorningStarDataAlgorithm(QCAlgorithm):
 
     def initialize(self) -&gt; None:
-        self.set_start_date(2021, 1, 1)
-        self.set_end_date(2021, 7, 1)
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(100000) 
-        
+        # Seed the price of each asset with its last known price to avoid trading errors.
+        self.settings.seed_initial_prices = True
         self.universe_settings.resolution = Resolution.DAILY
         self.universe_size = 10
         # Add universe selection to filter with fundamental data
@@ -38,7 +38,7 @@ class MorningStarDataAlgorithm(QCAlgorithm):
 
     def on_data(self, slice: Slice) -&gt; None:
         # if we have no changes, do nothing
-        if self._changes is None: return
+        if self._changes is None or not slice.bars: return
 
         # liquidate removed securities, as not being the most popular stocks anymore
         for security in self._changes.removed_securities:
@@ -51,14 +51,9 @@ class MorningStarDataAlgorithm(QCAlgorithm):
 
         self._changes = None
            
-           
     def on_securities_changed(self, changes: SecurityChanges) -&gt; None:
         self._changes = changes
-        
-        for security in changes.added_securities:
-            # Historical data
-            history = self.history(security.symbol, 7, Resolution.DAILY)
-            self.debug(f"We got {len(history)} from our history request for {security.symbol}")</pre>
+</pre>
 <pre class="csharp">public class MorningStarDataAlgorithm : QCAlgorithm
 {
     private int _universeSize = 10;
@@ -66,13 +61,14 @@ class MorningStarDataAlgorithm(QCAlgorithm):
     
     public override void Initialize()
     {
-        SetStartDate(2021, 1, 1);
-        SetEndDate(2021, 7, 1);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(100000);
-        
+        // Seed the price of each asset with its last known price to avoid trading errors.
+        Settings.SeedInitialPrices = true;
         // Requesting data
         UniverseSettings.Resolution = Resolution.Daily;
-        # Add universe selection to filter with fundamental data
+        // Add universe selection to filter with fundamental data
         AddUniverse(FundamentalSelectionFunction);
     }
 
@@ -94,7 +90,7 @@ class MorningStarDataAlgorithm(QCAlgorithm):
     public override void OnData(Slice slice)
     {
         // if we have no changes, do nothing
-        if (_changes == SecurityChanges.None) return;
+        if (_changes == SecurityChanges.None || slice.Bars.Count == 0) return;
 
         // liquidate removed securities, as not being the most popular stocks anymore
         foreach (var security in _changes.RemovedSecurities)
@@ -117,14 +113,6 @@ class MorningStarDataAlgorithm(QCAlgorithm):
     public override void OnSecuritiesChanged(SecurityChanges changes)
     {
         _changes = changes;
-
-
-        foreach (var security in changes.AddedSecurities)
-        {
-            // Historical data
-            var history = History(security.Symbol, 7, Resolution.Daily);
-            Debug($"We got {history.Count()} from our history request for {security.Symbol}");
-        }
     }
 }</pre>
 </div>
@@ -133,48 +121,47 @@ class MorningStarDataAlgorithm(QCAlgorithm):
 
 <div class="section-example-container testable">
 <pre class="python">from AlgorithmImports import *
-from Selection.FundamentalUniverseSelectionModel import FundamentalUniverseSelectionModel
 
 class MorningStarDataAlgorithm(QCAlgorithm):
 
     def initialize(self) -&gt; None:
-        self.set_start_date(2021, 1, 1)
-        self.set_end_date(2021, 7, 1)
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(100000) 
-        
+
         # Add universe selection to filter with fundamental data
         self.universe_settings.resolution = Resolution.DAILY
         self.set_universe_selection(CustomFundamentalUniverseSelectionModel())
-        
+
         self.set_alpha(ConstantAlphaModel(InsightType.PRICE, InsightDirection.UP, timedelta(1)))
 
         # we want 1/N allocation in each security in our universe to evenly dissipate risk
         self.set_portfolio_construction(EqualWeightingPortfolioConstructionModel())
-         
+
         self.add_risk_management(NullRiskManagementModel())
-        
+
         self.set_execution(ImmediateExecutionModel())
-        
+
 
 class CustomFundamentalUniverseSelectionModel(FundamentalUniverseSelectionModel):
 
-    def Select(self, algorithm: QCAlgorithm, fundamental: List[Fundamental]) -&gt; List[Symbol]:
+    def select(self, algorithm: QCAlgorithm, fundamental: List[Fundamental]) -&gt; List[Symbol]:
         # Make sure fundamental data and PE ratio available 
         # To avoid penny stocks with high volatility, set price above $1
-        filtered = [x for x in fundamental if x.has_fundamental_data and x.price &gt; 1 and not np.isnan(x.valuation_ratios.pe_ratio)]
         # Filter the top 100 high dollar volume equities to ensure liquidity
-        sorted_by_dollar_volume = sorted(filtered, key=lambda x: x.dollar_volume, reverse=True)[:100]
+        sorted_by_dollar_volume = sorted([x for x in fundamental if x.price &gt; 1 and not np.isnan(x.valuation_ratios.pe_ratio)],
+            key=lambda x: x.dollar_volume, reverse=True)[:100]
         # Get the top 10 PE Ratio stocks to follow speculations of a large number of capital
         sorted_by_pe_ratio = sorted(sorted_by_dollar_volume, key=lambda x: x.valuation_ratios.pe_ratio, reverse=True)[:10]
 
-        # take the top entries from our sorted collection
+        # Take the top entries from our sorted collection
         return [ x.symbol for x in sorted_by_pe_ratio ]</pre>
 <pre class="csharp">public class MorningStarDataAlgorithm : QCAlgorithm
 {        
     public override void Initialize()
     {
-        SetStartDate(2021, 1, 1);
-        SetEndDate(2021, 7, 1);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(100000);
         
         // Add universe selection to filter with fundamental data

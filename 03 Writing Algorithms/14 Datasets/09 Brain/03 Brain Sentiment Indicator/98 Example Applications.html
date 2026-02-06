@@ -11,7 +11,7 @@ The Brain Sentiment Indicator dataset enables you to incorporate sentiment from 
 
 <div class="section-example-container testable">
 <pre class="python">from AlgorithmImports import *
-from QuantConnect.DataSource import *
+
 
 class BrainSentimentDataAlgorithm(QCAlgorithm):
     
@@ -19,8 +19,8 @@ class BrainSentimentDataAlgorithm(QCAlgorithm):
     target_holdings = 0
     
     def initialize(self) -&gt; None:
-        self.set_start_date(2019, 1, 1)
-        self.set_end_date(2021, 7, 8)
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 12, 31)
         self.set_cash(100000) 
         
         # Requesting the processed longer term (30-day) sentiment score data for sentiment trading
@@ -66,8 +66,8 @@ class BrainSentimentDataAlgorithm(QCAlgorithm):
     
     public override void Initialize()
     {
-        SetStartDate(2019, 1, 1);
-        SetEndDate(2021, 7, 8);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 12, 31);
         SetCash(100000);
         
         // Requesting the processed longer term (30-day) sentiment score data for sentiment trading
@@ -108,7 +108,7 @@ class BrainSentimentDataAlgorithm(QCAlgorithm):
 
         // Ensure we have security data in the current slice to avoid stale fill
         // Buy if sentiment increase, liquidate otherwise to ride on the popularity of the equity
-        if (slice.Bar.ContainsKey(_symbol) &amp;&amp; _targetHoldings == 1 != Portfolio.Invested)
+        if (slice.Bars.ContainsKey(_symbol) &amp;&amp; _targetHoldings == 1 != Portfolio.Invested)
         {
             SetHoldings(_symbol, _targetHoldings);
         }
@@ -120,12 +120,12 @@ class BrainSentimentDataAlgorithm(QCAlgorithm):
 
 <div class="section-example-container testable">
 <pre class="python">from AlgorithmImports import *
-from QuantConnect.DataSource import *
+
 
 class BrainSentimentDataAlgorithm(QCAlgorithm):
     def initialize(self) -&gt; None:
-        self.set_start_date(2019, 1, 1)
-        self.set_end_date(2021, 7, 8)
+        self.set_start_date(2024, 9, 1)
+        self.set_end_date(2024, 9, 10)
         self.set_cash(100000) 
         
         self.settings.minimum_order_margin_portfolio_percentage = 0
@@ -193,7 +193,6 @@ class SymbolData:
         
         # Historical data
         history = algorithm.history(self.dataset_symbol, 100, Resolution.DAILY)
-        algorithm.debug(f"We got {len(history)} items from our history request for {self.dataset_symbol}")
         if history.empty or 'sentiment' not in history.columns:
             return
         
@@ -218,8 +217,8 @@ class SymbolData:
 {
     public override void Initialize()
     {
-        SetStartDate(2019, 1, 1);
-        SetEndDate(2021, 7, 8);
+        SetStartDate(2024, 9, 1);
+        SetEndDate(2024, 9, 10);
         SetCash(100000);
         
         Settings.MinimumOrderMarginPortfolioPercentage = 0;
@@ -229,7 +228,7 @@ class SymbolData:
         {
             // Filter for any sentiment on last 7 days to trade on sentiment news
             return from d in altCoarse.OfType&lt;BrainSentimentIndicatorUniverse&gt;()
-                where d.TotalArticleMentions7Days &gt; 0m
+                where d.SentimentalArticleMentions7Days &gt; 0m
                 select d.Symbol;
         });
         
@@ -258,22 +257,22 @@ public class BrainSentimentAlphaModel : AlphaModel
             var symbolData = entry.Value;
 
             // Update trade direction based on updated data
-            if (slice.ContainsKey(symbolData.datasetSymbol)  &amp;&amp; slice[symbolData.datasetSymbol] != null)
+            if (slice.ContainsKey(symbolData.datasetSymbol)   &amp;&amp; slice[symbolData.datasetSymbol] != null)
             {
                 var sentiment = slice[symbolData.datasetSymbol].Sentiment;
                 symbolData.Update(sentiment);
             }
             
             // Ensure we have security data in the current slice to avoid stale fill
-            if (!(slice.ContainsKey(symbol) &amp;&amp; slice[symbol] != null))
+            if (!(slice.ContainsKey(symbol)  &amp;&amp; slice[symbol] != null))
             {
                 continue;
             }
 
             // Buy if sentiment increase, liquidate otherwise to ride on the popularity of the equity
-            if (symbolData.targetDirection == InsightDirection.Up != algorithm.Portfolio[symbol].Invested)
+            if (symbolData.targetDirection == InsightDirection.Up  &amp;&amp; !algorithm.Portfolio[symbol].Invested)
             {
-                insights.Add(Insight.Price(symbol, TimeSpan.FromDays(365), symbolData.targetDirection));
+                insights.Add(Insight.Price(symbol, TimeSpan.FromDays(100), symbolData.targetDirection));
             }
         }
         
@@ -317,7 +316,6 @@ public class SymbolData
         
         // Historical data
         var history = algorithm.History&lt;BrainSentimentIndicator30Day&gt;(datasetSymbol, 100, Resolution.Daily);
-        algorithm.Debug($"We got {history.Count()} items from our history request for {symbol}");
         if (history.Count() == 0)
         {
             return;
